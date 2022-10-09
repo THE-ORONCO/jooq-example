@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/test
+    username: 'root'
+    password: 'root'
+    driverClassName: org.h2.Driver
+    data: import.sql

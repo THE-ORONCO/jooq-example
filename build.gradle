@@ -1,0 +1,84 @@
+import nu.studer.gradle.jooq.JooqEdition
+import org.jooq.meta.jaxb.Logging
+
+buildscript {
+    configurations['classpath'].resolutionStrategy.eachDependency {
+        if (requested.group == 'org.jooq') {
+            useVersion '3.14.16'
+        }
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'nu.studer.jooq' version '7.1.1'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    jooqGenerator 'org.mariadb.jdbc:mariadb-java-client'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jooq {
+    // use jOOQ version defined in Spring Boot
+    version = dependencyManagement.importedProperties['jooq.version']
+    edition = JooqEdition.OSS
+
+    configurations {
+        main {
+            generationTool {
+                logging = Logging.WARN
+                jdbc {
+                    driver = 'org.mariadb.jdbc.Driver'
+                    url = 'jdbc:mariadb://localhost:3306/test'
+                    user = 'root'
+                    password = 'root'
+
+                }
+                generator {
+                    name = 'org.jooq.codegen.DefaultGenerator'
+                    database {
+                        name = 'org.jooq.meta.mariadb.MariaDBDatabase'
+                        includes = '.*'
+                        excludes = ''
+                    }
+                    generate {
+                        deprecated = false
+                        records = false
+                        immutablePojos = false
+                        fluentSetters = false
+                    }
+                    target {
+                        packageName = 'org.example.generated.jooq'
+                        directory = 'src/main/java/org/example/generated/jooq'
+                    }
+                    strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
+                }
+            }
+        }
+    }
+}
+

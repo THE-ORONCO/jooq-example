@@ -1,0 +1,6 @@
+services:
+  maria:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 3306:3306

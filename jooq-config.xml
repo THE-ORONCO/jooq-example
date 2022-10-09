@@ -1,0 +1,37 @@
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.17.0.xsd">
+    <!-- Configure the database connection here -->
+    <jdbc>
+        <driver>org.mariadb.jdbc.Driver</driver>
+        <url>jdbc:mariadb://localhost:3306/test</url>
+        <user>root</user>
+        <password>root</password>
+
+    </jdbc>
+
+    <generator>
+        <database>
+            <name>org.jooq.meta.mariadb.MariaDBDatabase</name>
+
+            <includes>.*</includes>
+
+            <inputSchema>[your database schema / owner / name]</inputSchema>
+        </database>
+
+        <!-- Generation flags: See advanced configuration properties -->
+        <generate/>
+
+        <target>
+            <!-- The destination package of your generated classes (within the
+                 destination directory)
+
+                 jOOQ may append the schema name to this package if generating multiple schemas,
+                 e.g. org.jooq.your.packagename.schema1
+                      org.jooq.your.packagename.schema2 -->
+            <packageName>org.example.generated.jooq</packageName>
+
+            <!-- The destination directory of your generated classes -->
+            <directory>src/generated/jooq</directory>
+        </target>
+    </generator>
+</configuration>
+
